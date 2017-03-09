@@ -88,7 +88,11 @@ var UserSchema = new mongoose.Schema({
     },
     rooms: [{
 		type: ObjectId,
-		ref: 'Room'
+		ref: 'Room' 
+    }],
+    openRooms: [{
+      		type: String,
+                trim: true
     }],
 	messages: [{
 		type: ObjectId,
@@ -108,6 +112,9 @@ UserSchema.virtual('local').get(function() {
 });
 
 UserSchema.virtual('avatar').get(function() {
+    if (!this.email) {
+      return null;
+    }
     return md5(this.email);
 });
 
@@ -271,7 +278,8 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        avatar: this.avatar
+        avatar: this.avatar,
+        openRooms: this.openRooms,
     };
 });
 
